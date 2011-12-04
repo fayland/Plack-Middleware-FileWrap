@@ -90,3 +90,13 @@ Arrayref. Text ref or file paths. can be mixed like
     headers => [ \'<!-- blabla -->', '/path/to/file/header.html' ]
 
 =back
+
+=head3 EXAMPLES with enable_if
+
+If you have images or other files under the same directory and you don't want to apply the changes, please use enable_if:
+
+    mount '/static/docs/' => builder {
+        enable_if { $_[0]->{PATH_INFO} =~ /\.html/ } 'FileWrap',
+            headers => ["$root/static/docs/header.html"], footers => ["$root/static/docs/footer.html"];
+        Plack::App::File->new( root => "$root/static/docs" )->to_app;
+    },
